@@ -1,5 +1,4 @@
-
-
+/* app.js is intended to be the main javascript file for the website. */
 
 
 // Checks if the page is completely loaded (including images, scripts, styles, etc.)
@@ -12,5 +11,5 @@ document.onreadystatechange = () => {
 
 // "Main" function
 function callback() {
-    
+
 }
