@@ -51,7 +51,7 @@ app.post("/pages/user/register", function(req, res) {
     console.log("Post!");
     var createUser = "INSERT INTO USER (FirstName, LastName, Email, UserType) VALUES('Nathan', 'Call', 'test@gmail.com', 'TestUser')";
     var checkUser = "SELECT * FROM USER";
-    var deleteUser = "DELETE FROM USER WHERE UserType='TestUser'"
+    var deleteUser = "DELETE FROM USER WHERE UserType='TestUser'";
 
     connection.query(createUser, function (err, result) {
         if (err) throw err;
@@ -65,7 +65,7 @@ app.post("/pages/user/register", function(req, res) {
 
     connection.query(deleteUser, function(err, result) {
         if (err) throw err;
-        console.log("Test user(s) deleted.")
+        console.log("Test user(s) deleted.");
     });
     res.redirect('/pages/user/login.html');
 });
