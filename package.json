@@ -14,8 +14,10 @@
   "author": "Nathan Call, Bryan Goodman, Isaac Smith",
   "license": "ISC",
   "dependencies": {
+    "argon2": "^0.31.2",
     "express": "^4.18.2",
     "express-session": "^1.17.3",
+    "express-validator": "^7.0.1",
     "mysql2": "^3.6.2"
   },
   "devDependencies": {

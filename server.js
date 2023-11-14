@@ -1,27 +1,13 @@
 const express = require('express');
+const { body, matchedData, validationResult } = require('express-validator')
 const path = require("path");
-const mysql2 = require("mysql2");
-//const user = require("./server-scripts/user.js");
+const user = require("./server-scripts/user")
 
 const app = express();
 const port = 8080;
 
 app.use(express.static('./'));
 app.use(express.urlencoded({extended:true}));
-
-
-var connection = mysql2.createConnection({
-    host: "localhost",
-    user: "root",
-    password: "Passw0rd!", // Must replace with database password.
-    database: "dev_database"
-});
-
-connection.connect((err) => {
-    if (err) throw err; // Throw error if connection is unsuccessful.
-    console.log("Database connected");
-});
-
 
 
 // Routing for GET requests to the server through various directories.
@@ -34,43 +20,44 @@ app.get("/pages/", function (req, res) {
 });
 
 app.get("/pages/user/", function (req, res) {
-    console.log("Test");
     res.redirect('/pages/user/login.html');
 });
 
 app.get("/pages/user/login", function (req, res) {
-    console.log("Test");
     res.redirect('/pages/user/login.html');
+});
+
+app.get("/pages/user/register", function (req, res) {
+    res.redirect("/pages/user/register.html");
 });
 
 // End GET routing.
 
-// Routing for POST requests
+// Routing for POST requests.
+app.post("/pages/user/register",
+    body('firstName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(),
+    body('lastName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(),
+    body('email').trim().notEmpty().withMessage("An email address is required.").isEmail().withMessage("Email address is incorrectly formatted. Example of correct email: ExampleAddress@email.com").escape(),
+    body('password').isLength({min: 8}).withMessage("Passwords must be at least 8 characters.").escape(),
+    body('confirmPassword').custom((value, {req}) => {
+        return value === req.body.password;
+    }).withMessage("Passwords do not match.").escape(),
+function(req, res) {
+    //user.testQuery(); // do a test query to check the database connection
 
-app.post("/pages/user/register", function(req, res) {
-    console.log("Post!");
-    var createUser = "INSERT INTO USER (FirstName, LastName, Email, UserType) VALUES('Nathan', 'Call', 'test@gmail.com', 'TestUser')";
-    var checkUser = "SELECT * FROM USER";
-    var deleteUser = "DELETE FROM USER WHERE UserType='TestUser'";
+    // if data is bad then send message to client with user-friendly errors
 
-    connection.query(createUser, function (err, result) {
-        if (err) throw err;
-        console.log("Created test user.");
-    });
+    // else if data is good then make user and redirect to login
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var email = req.body.email;
+    var password = req.body.password; // Database type will have to be changed to CHAR(86)? Salt column must be added to user table.
+    var confirmPassword = req.body.confirmPassword;
 
-    connection.query(checkUser, function (err, result) {
-        if (err) throw err;
-        console.log(result);
-    });
-
-    connection.query(deleteUser, function(err, result) {
-        if (err) throw err;
-        console.log("Test user(s) deleted.");
-    });
     res.redirect('/pages/user/login.html');
 });
 
-
+// End POST routing.
 
 
 

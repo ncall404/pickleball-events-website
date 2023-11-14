@@ -1,37 +1,36 @@
-/**/
+/*
+user.js is for handling user operations such as registering or logging in.
+Queries should be done through prepared statements.
+*/
 
-//import connection from "./database-connect.js";
-const connection = require("./database-connect");
-//import db from "./new-database-connect.js";
+var db = require("./database-connect");
+
 
 // Creates a new user in the database if they don't exist
-function registerUser() {
+exports.registerUser = function registerUser(firstName, lastName, email, password) {
 
 }
 
-function loginUser() {
+exports.loginUser = function loginUser(email, password) {
 
 }
 
 exports.testQuery = function testQuery() {
-    //var userTable = db.getTable('USER');
-    //userTable.insert(['FirstName', 'LastName', 'Email', 'UserType']).values('Nathan', 'Call', 'test@gmail.com', 'TestUser').execute();
-
     var createUser = "INSERT INTO USER (FirstName, LastName, Email, UserType) VALUES('Nathan', 'Call', 'test@gmail.com', 'TestUser')";
     var checkUser = "SELECT * FROM USER";
     var deleteUser = "DELETE FROM USER WHERE UserType='TestUser'"
 
-    connection.query(createUser, function (err, result) {
+    db.connection.query(createUser, function (err, result) {
         if (err) throw err;
         console.log("Created test user.");
     });
 
-    connection.query(checkUser, function (err, result) {
+    db.connection.query(checkUser, function (err, result) {
         if (err) throw err;
         console.log(result);
     });
 
-    connection.query(deleteUser, function(err, result) {
+    db.connection.query(deleteUser, function(err, result) {
         if (err) throw err;
         console.log("Test user(s) deleted.")
     });
