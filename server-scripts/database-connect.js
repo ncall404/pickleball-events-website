@@ -15,7 +15,8 @@ var connection = mysql2.createConnection({
     host: "localhost",
     user: "root",
     password: "Passw0rd!", // Must replace with database password.
-    database: "dev_database"
+    database: "dev_database",
+    namedPlaceholders: true
 });
 
 connection.connect((err) => {

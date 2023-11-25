@@ -1,7 +1,12 @@
+/*
+server.js is for running the server and handling the routing of the website. Handling the routing includes doing any server-side validation for submitted forms.
+*/
+
 const express = require('express');
 const { body, matchedData, validationResult } = require('express-validator')
 const path = require("path");
-const user = require("./server-scripts/user")
+const user = require("./server-scripts/user");
+const custValidation = require("./server-scripts/custom-validation");
 
 const app = express();
 const port = 8080;
@@ -34,28 +39,41 @@ app.get("/pages/user/register", function (req, res) {
 // End GET routing.
 
 // Routing for POST requests.
+    // User registration POST request.
 app.post("/pages/user/register",
-    body('firstName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(),
-    body('lastName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(),
-    body('email').trim().notEmpty().withMessage("An email address is required.").isEmail().withMessage("Email address is incorrectly formatted. Example of correct email: ExampleAddress@email.com").escape(),
-    body('password').isLength({min: 8}).withMessage("Passwords must be at least 8 characters.").escape(),
-    body('confirmPassword').custom((value, {req}) => {
+    body('firstName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape() // End of first name validation.
+    ,body('lastName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape() // End of last name validation.
+    ,body('email').notEmpty().withMessage("An email address is required.").trim().toLowerCase().escape().isEmail().withMessage("Email address is incorrectly formatted. Example of correct email: ExampleAddress@email.com")
+    .custom(value =>
+        user.doesUserExist(value)
+        .then(custValidation.checkUser(results))
+        .catch(custValidation.unexpectedError(err))
+    ).withMessage("A user with this email already exists.") // End of email validation.
+    ,body('password').isLength({min: 8}).withMessage("Passwords must be at least 8 characters.").escape() // End of password validation.
+    ,body('confirmPassword')
+    .custom((value, {req}) => {
         return value === req.body.password;
-    }).withMessage("Passwords do not match.").escape(),
+    }).withMessage("Passwords do not match.").escape(), // End of password confirmation validation.
 function(req, res) {
-    //user.testQuery(); // do a test query to check the database connection
+    const errors = validationResult(req);
+    // if data is good then make user and redirect to login.
+    if (errors.array().length <= 0) {
+        console.log(errors.array());
+        const data = matchedData(req);
+        user.registerUser(data.firstName, data.lastName, data.email, data.password);
 
-    // if data is bad then send message to client with user-friendly errors
+        res.redirect('/pages/user/login.html');
+    }
+    // else if data is bad then send message to client with user-friendly error messages.
+    else if (errors.array().length > 0) {
+        console.log(errors.array());
+        res.send( {errors: errors.array() });
+    }
 
-    // else if data is good then make user and redirect to login
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var email = req.body.email;
-    var password = req.body.password; // Database type will have to be changed to CHAR(86)? Salt column must be added to user table.
-    var confirmPassword = req.body.confirmPassword;
-
-    res.redirect('/pages/user/login.html');
 });
+
+    // User login POST request.
+// ===== TODO: login post request =====
 
 // End POST routing.
 
