@@ -15,12 +15,8 @@ exports.doesUserExist = function doesUserExist(email) {
                 if (err) reject(err);
 
                 if (results.length > 0) {
-                    console.log(results.length);
-                    console.log("User already exists...");
                     resolve(true);
                 } else {
-                    console.log(results.length);
-                    console.log("User doesn't exist!");
                     resolve(false);
                 }
             }
@@ -30,11 +26,21 @@ exports.doesUserExist = function doesUserExist(email) {
 
 // Creates a new user in the database if they don't exist.
 exports.registerUser = function registerUser(firstName, lastName, email, password) {
-    //console.log("User being registered...");
     db.connection.execute(
         'INSERT INTO User (FirstName, LastName, Email, Password, UserType) VALUES (?, ?, ?, ?, "User")',
-        [firstName, lastName, email, password]
+        [firstName, lastName, email, password],
+        err => {if (err) console.log(err);}
     );
+}
+
+exports.fetchPassword = function fetchPassword(email) {
+    db.connection.execute(
+        'SELECT Password FROM User WHERE Email = ?',
+        [email],
+        function(err, results) {
+            //if (err) 
+        }
+    )
 }
 
 exports.loginUser = function loginUser(email, password) {

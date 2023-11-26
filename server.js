@@ -41,22 +41,17 @@ app.get("/pages/user/register", function (req, res) {
 // Routing for POST requests.
     // User registration POST request.
 app.post("/pages/user/register",
-    body('firstName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape() // End of first name validation.
-    ,body('lastName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape() // End of last name validation.
-    ,body('email').notEmpty().withMessage("An email address is required.").trim().toLowerCase().escape().isEmail().withMessage("Email address is incorrectly formatted. Example of correct email: ExampleAddress@email.com")
-    .custom(value =>
-        user.doesUserExist(value)
-        .then(custValidation.checkUser(results))
-        .catch(custValidation.unexpectedError(err))
-    ).withMessage("A user with this email already exists.") // End of email validation.
-    ,body('password').isLength({min: 8}).withMessage("Passwords must be at least 8 characters.").escape() // End of password validation.
-    ,body('confirmPassword')
-    .custom((value, {req}) => {
-        return value === req.body.password;
-    }).withMessage("Passwords do not match.").escape(), // End of password confirmation validation.
+    body('firstName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(), // End of first name validation.
+    body('lastName').notEmpty().withMessage("A first name is required.").trim().isAlpha().withMessage("First name must be alphabet letters.").escape(), // End of last name validation.
+    body('email').notEmpty().withMessage("An email address is required.").trim().toLowerCase().escape().isEmail().withMessage("Email address is incorrectly formatted. Example of correct email: ExampleAddress@email.com")
+    .custom( value =>user.doesUserExist(value).then(results => custValidation.checkUser(results))), // End of email validation.
+    body('password').isLength({min: 8}).withMessage("Passwords must be at least 8 characters.").escape(), // End of password validation.
+    body('confirmPassword').escape()
+    .custom((value, {req}) => { return value === req.body.password; }).withMessage("Passwords do not match."), // End of password confirmation validation.
+    body('password').customSanitizer(value => custValidation.hashPassword(value)), // Password hashing is done after confirmation so that it doesn't have to be done twice.
 function(req, res) {
     const errors = validationResult(req);
-    // if data is good then make user and redirect to login.
+    // if no errors then make user and redirect to login.
     if (errors.array().length <= 0) {
         console.log(errors.array());
         const data = matchedData(req);
@@ -64,16 +59,24 @@ function(req, res) {
 
         res.redirect('/pages/user/login.html');
     }
-    // else if data is bad then send message to client with user-friendly error messages.
+    // else if errors then send error messages to client and stay on the registration page.
     else if (errors.array().length > 0) {
         console.log(errors.array());
         res.send( {errors: errors.array() });
     }
-
 });
 
     // User login POST request.
 // ===== TODO: login post request =====
+app.post("/pages/user/login",
+    body('email').escape(),
+    body('password').escape(),
+function(req, res) {
+    res.redirect('/pages/events/event-list.html');
+});
+
+    // Event creation POST request.
+// ===== TODO: event creation post request =====
 
 // End POST routing.
 
