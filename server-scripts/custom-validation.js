@@ -8,7 +8,7 @@ const argon2 = require('argon2');
 
 exports.checkUser = function checkUser(results) {
     if (results) {
-        throw new Error("A user with this email already exists.");
+        return false
     } else {
         return true;
     }
@@ -19,13 +19,17 @@ exports.hashPassword = async function hashPassword(password) {
         const hash = await argon2.hash(password);
         return hash;
     } catch (err) {
-        console.log("Unexpected error caught: " + err);
+        console.log("Unexpected system error caught: " + err);
         throw new Error("There was a problem registering your account.");
     }
 }
 
-exports.verifyPassword = function verifyPassword(password) {
-    
+exports.verifyPassword = async function verifyPassword(password, storedHash) {
+    if (await argon2.verify(storedHash, password)) {
+        return true
+    } else {
+        throw new Error("Incorrect password.")
+    }
 }
 
 exports.unexpectedError = function unexpectedError(error) {

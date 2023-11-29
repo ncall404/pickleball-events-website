@@ -33,14 +33,23 @@ exports.registerUser = function registerUser(firstName, lastName, email, passwor
     );
 }
 
-exports.fetchPassword = function fetchPassword(email) {
-    db.connection.execute(
-        'SELECT Password FROM User WHERE Email = ?',
-        [email],
-        function(err, results) {
-            //if (err) 
-        }
-    )
+exports.fetchPassword = function fetchPassword(email, password) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT Password FROM User WHERE Email = ?',
+            [email],
+            function (err, results) {
+                if (err) reject(err);
+
+                if (results.length > 0) {
+                    resolve([password, results[0].Password]);
+                } else {
+                    resolve([password, ""]);
+                }
+            }
+        )
+    })
+        
 }
 
 exports.loginUser = function loginUser(email, password) {
