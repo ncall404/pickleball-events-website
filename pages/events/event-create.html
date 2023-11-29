@@ -22,22 +22,28 @@
 
         <div id="eventCreateMessage"></div>
         <form action="/pages/events/event-create" method="post" novalidate>
-            <label for="registerFirstName">Event Name</label>
-            <input type="text" name="firstName" placeholder="Your first name" id="registerFirstName" aria-required="true"> <br>
+            <label for="eventName">Event Name</label>
+            <input type="text" name="eventName" placeholder="Your event name" id="eventName" aria-required="true"> <br>
 
-            <label for="registerFirstName">Event Date and Time:</label> <br>
+            <label for="eventDateTime">Event Date and Time:</label> 
+            <input type="datetime" name="eventDateTime" id="eventDateTime"><br>
 
-            <label for="registerFirstName">Event Street Address</label>
-            <input type="text" name="firstName" placeholder="Your first name" id="registerFirstName" aria-required="true"> <br>
+            <label for="eventAddress">Event Street Address</label>
+            <input type="text" name="eventAddress" placeholder="800 W Example Street" id="eventAddress" aria-required="true"> <br>
 
-            <label for="registerFirstName">Event City</label> <br>
+            <label for="eventCity">Event City</label> 
+            <input type="text" name="eventCity" placeholder="Orem" id="eventCity"><br>
 
-            <label for="registerFirstName">Event State</label> <br>
+            <label for="eventState">Event State</label> 
+            <select id="stateList">
 
-            <label for="registerFirstName">Event ZIP Code</label> <br>
+            </select><br>
 
-            <label for="registerFirstName">Event Description</label>
-            <input type="text" name="firstName" placeholder="Your first name" id="registerFirstName" aria-required="false"> <br>
+            <label for="eventZIP">Event ZIP Code</label> 
+            <input type="text" name="eventZIP" id="eventZIP"><br>
+
+            <label for="eventDescription">Event Description</label>
+            <textarea name="eventDescription" id="eventDescription" cols="30" rows="10" aria-required="false"></textarea><br>
 
 
             <input type="submit" value="Create Event">
