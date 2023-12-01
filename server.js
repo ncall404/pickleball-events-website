@@ -3,7 +3,7 @@ server.js is for running the server and handling the routing of the website. Han
 */
 
 const express = require('express');
-const { body, matchedData, validationResult } = require('express-validator')
+const { body, matchedData, validationResult } = require('express-validator');
 const path = require("path");
 const user = require("./server-scripts/user");
 const custValidation = require("./server-scripts/custom-validation");

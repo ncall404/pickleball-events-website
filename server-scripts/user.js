@@ -55,25 +55,3 @@ exports.fetchPassword = function fetchPassword(email, password) {
 exports.loginUser = function loginUser(email, password) {
 
 }
-
-exports.testQuery = function testQuery() {
-    var createUser = "INSERT INTO User (FirstName, LastName, Email, UserType) VALUES('Nathan', 'Call', 'test@gmail.com', 'TestUser')";
-    var checkUser = "SELECT * FROM User";
-    var deleteUser = "DELETE FROM User WHERE UserType='TestUser'"
-
-    db.connection.query(createUser, function (err, results) {
-        if (err) throw err;
-        console.log("Created test user.");
-    });
-
-    db.connection.query(checkUser, function (err, results) {
-        if (err) throw err;
-        console.log(results);
-    });
-
-    db.connection.query(deleteUser, function(err, results) {
-        if (err) throw err;
-        console.log("Test user(s) deleted.")
-    });
-}
-
