@@ -1,5 +1,6 @@
 /*
-custom-validation.js is for functions that act as custom validaiton for website forms.
+custom-validation.js is for functions that act as custom validaiton and sanitization for the website forms.
+Some validation may still be done with functions in other files.
 It also handles password hashing.
 */
 
@@ -29,6 +30,17 @@ exports.verifyPassword = async function verifyPassword(password, storedHash) {
         return true
     } else {
         throw new Error("Incorrect password.")
+    }
+}
+
+exports.convertDateTime = function convertDateTime(dateTime) {
+    try {
+        var newDateTime = new Date(dateTime).toISOString().slice(0, 19).replace('T', ' ');
+        return newDateTime;
+    }
+    catch (err) {
+        console.log(err);
+        throw new Error("Please input an event date and time.");
     }
 }
 

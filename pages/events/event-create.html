@@ -32,15 +32,15 @@
             <input type="text" name="eventAddress" placeholder="800 W Example Street" id="eventAddress" aria-required="true"> <br>
 
             <label for="eventCity">Event City</label> 
-            <input type="text" name="eventCity" placeholder="e.g. Salt Lake City" id="eventCity"><br>
+            <input type="text" name="eventCity" placeholder="e.g. Salt Lake City" id="eventCity" aria-required="true"><br>
 
-            <label for="stateList">Event State</label> 
-            <select id="stateList">
-
+            <label for="eventState">Event State</label> 
+            <select id="eventState" name="eventState" aria-required="true">
+                <option value="" disabled selected>Select State</option>
             </select><br>
 
             <label for="eventZIP">Event ZIP Code</label> 
-            <input type="text" name="eventZIP" id="eventZIP"><br>
+            <input type="text" name="eventZIP" id="eventZIP" aria-required="true"><br>
 
             <label for="eventDescription">Event Description</label> <br>
             <textarea name="eventDescription" id="eventDescription" cols="30" rows="10" aria-required="false"></textarea><br>

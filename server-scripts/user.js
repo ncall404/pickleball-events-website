@@ -33,6 +33,7 @@ exports.registerUser = function registerUser(firstName, lastName, email, passwor
     );
 }
 
+// Fetches the hashed password of a given user email. Used for internal server operations only.
 exports.fetchPassword = function fetchPassword(email, password) {
     return new Promise(function(resolve, reject) {
         db.connection.execute(
@@ -49,9 +50,24 @@ exports.fetchPassword = function fetchPassword(email, password) {
             }
         )
     })
-        
 }
 
-exports.loginUser = function loginUser(email, password) {
-
+// Fetches the UserID of a given user email.
+exports.fetchUserID = async function fetchUserID(email) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT UserID FROM User WHERE Email=?',
+            [email],
+            function (err, results) {
+                if (err) reject(err);
+    
+                if (results.length > 0) {
+                    resolve(results[0].UserID);
+                } else {
+                    console.log("No user ID found!");
+                    throw new Error("UserID not found from your email! Does your account exist? If so, contact us at placeholder@gmail.com");
+                }
+            }
+        )
+    })
 }
