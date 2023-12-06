@@ -112,7 +112,7 @@ async function(req, res) {
     // else if errors then send error messages to client and stay on the login page.
     else if (errors.array().length > 0) {
         console.log(errors.array());
-        res.status(400).json( {errors: errors.array()} );
+        res.status(400).json( {errors: errors.array(), messageID: "loginMessage"} );
     }
 });
 

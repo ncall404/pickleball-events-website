@@ -11,5 +11,17 @@ document.onreadystatechange = () => {
 
 // "Main" function
 function callback() {
-    
+
+}
+
+function handleFormSubmit(event) {
+    event.preventDefault();
+    form = event.currentTarget;
+    url = form.action;
+    updateErrors(url);
+}
+
+async function updateErrors(url) {
+    const res = await fetch(url);
+    console.log(res.json());
 }

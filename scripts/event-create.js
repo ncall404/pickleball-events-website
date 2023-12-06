@@ -5,12 +5,13 @@
 document.onreadystatechange = () => {
     if (document.readyState === "complete") {
         // Run functions that need to be run after the page is completely loaded here.
-        callback();
+        setMinDate();
     }
 }
 
-// "Main" function
-function callback() {
+// Sets the minimum date on the date-time picker from the event creation form.
+// Has no return value.
+function setMinDate() {
     let dateInput = document.getElementById("eventDateTime");
     var minDate = new Date();
     minDate.setDate(minDate.getDate() - 1);
