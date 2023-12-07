@@ -18,6 +18,7 @@ app.use(session({
     resave: false,
     saveUninitialized: true
 })); // In production the secret would be replaced with something like an environment variable and would be much more secure. Session would possibly be stored in a database. For our purposes in this project, this placeholder will suffice. Additionaly, in production, you would potentially want to use something like Passport.js in conjunction with express-sessions for higher security.
+app.use(express.json())
 app.use(express.urlencoded({extended:true}));
 app.use(express.static('./'));
 
@@ -83,7 +84,7 @@ function(req, res) {
     // else if errors then send error messages to client and stay on the registration page.
     else if (errors.array().length > 0) {
         console.log(errors.array());
-        res.send( {errors: errors.array()} );
+        res.json( {errors: errors.array(), messageID: "registerMessage"} );
     }
 });
 
@@ -111,8 +112,7 @@ async function(req, res) {
     }
     // else if errors then send error messages to client and stay on the login page.
     else if (errors.array().length > 0) {
-        console.log(errors.array());
-        res.status(200).json( {errors: errors.array(), messageID: "loginMessage"} );
+        res.json( {errors: errors.array(), messageID: "loginMessage"} );
     }
 });
 
@@ -142,7 +142,7 @@ function(req, res) {
     }
     else if (errors.array().length > 0) {
         console.log(errors.array());
-        res.redirect("/pages/events/event-create");
+        res.json( {errors: errors.array(), messageID: "eventCreateMessage"} );
     }
 });
 
