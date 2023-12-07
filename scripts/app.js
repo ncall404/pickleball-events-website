@@ -22,6 +22,7 @@ function handleFormSubmit(event) {
 }
 
 async function updateErrors(url) {
+    console.log("check in");
     const res = await fetch(url);
     console.log(res.json());
 }

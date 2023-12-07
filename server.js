@@ -39,7 +39,7 @@ app.get("/pages/events/event-create", function (req, res) {
         res.sendFile(path.join(__dirname, '/pages/events/event-create.html'));
     } else {
         req.session.loggedIn = false;
-        res.status(401).send('<h1>Unauthorized to access this page.</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
+        res.status(401).send('<h1>Not logged in!</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
     } 
 });
 
@@ -48,7 +48,7 @@ app.get("/pages/events/event-list", function (req, res) {
         res.sendFile(path.join(__dirname, '/pages/events/event-list.html'));
     } else {
         req.session.loggedIn = false;
-        res.status(401).send('<h1>Unauthorized to access this page.</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
+        res.status(401).send('<h1>Not logged in!</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
     }
 });
 
@@ -112,7 +112,7 @@ async function(req, res) {
     // else if errors then send error messages to client and stay on the login page.
     else if (errors.array().length > 0) {
         console.log(errors.array());
-        res.status(400).json( {errors: errors.array(), messageID: "loginMessage"} );
+        res.status(200).json( {errors: errors.array(), messageID: "loginMessage"} );
     }
 });
 
