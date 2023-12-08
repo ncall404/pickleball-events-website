@@ -35,9 +35,14 @@ app.get("/pages/user/register", function (req, res) {
     res.sendFile(path.join(__dirname, '/pages/user/register.html'));
 });
 
-app.get("/pages/events/event-create", function (req, res) {
+app.get("/pages/events/event-create", async function (req, res) {
     if (req.session.loggedIn) {
-        res.sendFile(path.join(__dirname, '/pages/events/event-create.html'));
+        if (req.header('Content-Type') == 'application/json') {
+            const states = await event.fetchStates();
+            res.json( {states: states} );
+        } else {
+            res.sendFile(path.join(__dirname, '/pages/events/event-create.html'));
+        }
     } else {
         req.session.loggedIn = false;
         res.status(401).send('<h1>Not logged in!</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
@@ -120,24 +125,26 @@ async function(req, res) {
 app.post("/pages/events/event-create",
     body('eventName').notEmpty().withMessage("An event name is required.").bail().trim().isAlphanumeric('en-US', {ignore: ' '}).withMessage("Please keep the event name as only numbers, alphabetic letters, and spaces.").escape(),
     body('eventDateTime').isISO8601().withMessage("An event date and time are required.").toDate().escape(),
-    body('eventStreetAddress').notEmpty().withMessage("An event address is required.").bail().trim().isAlphanumeric('en-US', {ignore: ' '}).withMessage("Please keep the event address as only numbers, alphabetic letters, and spaces.").escape(),
+    body('eventAddress').notEmpty().withMessage("An event address is required.").bail().trim().isAlphanumeric('en-US', {ignore: ' '}).withMessage("Please keep the event address as only numbers, alphabetic letters, and spaces.").escape(),
     body('eventCity').notEmpty().withMessage("The city an event takes place in is is required.").bail().trim().isAlphanumeric('en-US', {ignore: ' '}).withMessage("Please keep the city as only numbers, alphabetic letters, and spaces.").escape(),
     body('eventState').escape().custom(async value => {
-        const isValid = await event.validState(value);
-        if (!isValid) {
+        var isValid = await event.getStateID(value);
+        if (isValid = false) {
             throw new Error("The state the event takes place in is required");
         } else {
             return true;
         }
     }),
     body('eventZIP').notEmpty().withMessage("The ZIP code / postal code where your event is taking place is required.").bail().isPostalCode('US').escape(),
-    body('eventDescription').trim().isAlphanumeric('en-US', {ignore: /\s/}).withMessage("Please keep the description as only numbers, alphabetic letters, and spaces/linebreaks.").bail().isLength({max: 500}).withMessage("The event description must be 500 characters or less.").escape(),
-function(req, res) {
+    body('eventDescription').trim().escape().matches( /[A-Za-z0-9\s\.,'":!\?&#\$\\]/ ).withMessage("Please keep the description as only numbers, alphabetic letters, spaces/linebreaks, and basic punctuation.").bail().isLength({max: 500}).withMessage("The event description must be 500 characters or less."),
+async function(req, res) {
     const errors = validationResult(req);
     if (errors.array().length <= 0) {
         const data = matchedData(req);
-        //const newDateTime = custValidation.convertDateTime(data.eventDateTime);
-        event.createEvent(req.session.userID, data.eventName, data.eventDateTime /*newDateTime*/, data.eventStreetAddress, data.eventCity, data.eventState, data.eventZIP, data.eventDescription);
+        var eventStateID = await event.getStateID(data.eventState);
+        const newDateTime = custValidation.convertDateTime(data.eventDateTime);
+        console.log(eventStateID);
+        event.createEvent(req.session.userID, data.eventName, newDateTime, data.eventAddress, data.eventCity, eventStateID, data.eventZIP, data.eventDescription);
         res.redirect("/pages/events/event-list");
     }
     else if (errors.array().length > 0) {

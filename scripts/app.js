@@ -2,16 +2,18 @@
 
 
 // Checks if the page is completely loaded (including images, scripts, styles, etc.)
-document.onreadystatechange = () => {
-    if (document.readyState === "complete") {
-        // Run functions that need to be run after the page is completely loaded here.
-        callback();
-    }
-}
+document.addEventListener("DOMContentLoaded", () => {
+    // Run functions that need to be run after the page is completely loaded here.
+    callback();
+});
 
-// "Main" function
+
+// "Main" function. Handles generic stuff like adding event listeners.
 function callback() {
-    document.querySelectorAll('form').forEach(form => form.addEventListener("submit", handleFormSubmit));
+    var forms = document.querySelectorAll('form')
+    for (let form of forms) {
+        form.addEventListener("submit", handleFormSubmit);
+    }
 }
 
 function handleFormSubmit(event) {
@@ -48,7 +50,6 @@ async function updateErrors(url, formData) {
             var errorString = document.createTextNode(error.path + ": " + error.msg);
             messageContainer.appendChild(errorString);
             messageContainer.appendChild(document.createElement("br"));
-            console.log(error.path+": "+error.msg);
         });
     }
 }
