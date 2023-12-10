@@ -6,7 +6,7 @@
     <!--Bootstrap CSS Link-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <!--Main CSS Link-->
-    <link href="../../styles/style.css" rel="stylesheet">
+    <link href="../../../css/styles.css" rel="stylesheet">
     <title>Pickleball Events - Create Event</title>
 </head>
 <body>
@@ -18,27 +18,34 @@
     </header>
 
     <main>
-        <div id="availableEvents">
-            <h2>Available Events:</h2>
-            <div id="availableEventsList">
-                
+
+        <h2>Events</h2>
+        <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="availableTab" data-bs-toggle="tab" data-bs-target="#availableEvents" type="button" role="tab" aria-controls="availableEvents" aria-selected="true">Available</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="joinedTab" data-bs-toggle="tab" data-bs-target="#joinedEvents" type="button" role="tab" aria-controls="joinedEvents" aria-selected="false">Joined</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="createdTab" data-bs-toggle="tab" data-bs-target="#createdEvents" type="button" role="tab" aria-controls="createdEvents" aria-selected="false">Created</button>
+            </li>
+          </ul>
+        <div class="tab-content" id="eventTabContent">
+            <div class="tab-pane fade show active"  id="availableEvents" role="tabpanel" aria-labelledby="availableTabContent" tabindex="0">
+                <div id="availableEventsList"></div>
+            </div>
+
+            <div class="tab-pane fade" id="joinedEvents" role="tabpanel" aria-labelledby="joinedTabContent" tabindex="0">
+                <div id="joinedEventsList"></div>
+            </div>
+    
+            <div class="tab-pane fade" id="createdEvents" role="tabpanel" aria-labelledby="createdTabContent" tabindex="0">
+                <div id="createdEventsList"></div>
             </div>
         </div>
-
-        <div id="joinedEvents">
-            <h2>Your Joined Events:</h2>
-            <div id="joinedEventsList">
-                
-            </div>
-        </div>
-
-        <div id="createdEvents">
-            <h2>Your Created Events:</h2>
-            <div id="createdEventsList">
-                
-            </div>
-        </div>
-
+          
+        
         <a href="/">Temporary Home Button</a> <br>
         <a href="./event-create">Create Event Form</a>
 
@@ -49,8 +56,9 @@
 
 
 
-    <!--Main Javascript Link-->
-    <script type="module" src="../../scripts/app.js"></script>
+    <!--Main Javascript Links-->
+    <script type="module" src="../../../scripts/app.js"></script>
+    <script type="module" src="../../../scripts/event-list.js"></script>
     <!--Bootstrap Javascript CDN Link-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 </body>

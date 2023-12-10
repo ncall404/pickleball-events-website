@@ -31,7 +31,6 @@ async function fetchStates() {
     })
     var contents = await res.json();
     var stateList = contents.states;
-    console.log(stateList);
 
     stateList.forEach(state => {
         var stateInitial = state.StateInitials;

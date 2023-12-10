@@ -44,9 +44,7 @@ async function updateErrors(url, formData) {
         var messageContainer = document.getElementById(messageID);
         messageContainer.innerHTML = "";
         errors.forEach(error => {
-            //var errorElement = document.createElement("p");
-            //errorElement.innerHTML = error.path + ": " + error.msg;
-            //messageContainer.appendChild(errorElement);
+            messageContainer.className = "alert alert-danger";
             var errorString = document.createTextNode(error.path + ": " + error.msg);
             messageContainer.appendChild(errorString);
             messageContainer.appendChild(document.createElement("br"));

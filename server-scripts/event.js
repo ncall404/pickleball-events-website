@@ -5,6 +5,7 @@ Queries should be done through prepared statements.
 
 var db = require("./database-connect");
 
+// Returns all the states in the State table.
 exports.fetchStates = function fetchStates() {
     return new Promise(function(resolve, reject) {
         db.connection.execute(
@@ -17,26 +18,44 @@ exports.fetchStates = function fetchStates() {
     })
 }
 
+exports.joinEvent = function joinEvent(eventID, userID) {
+    db.connection.execute(
+        'INSERT INTO EventAttendee (EventID, UserID) VALUES (?, ?)',
+        [eventID, userID],
+        err => {if(err) console.log(err);}
+    )
+}
+
 exports.createEvent = function createEvent(userID, eventName, eventDateTime, eventAddress, eventCity, eventState, eventZIP, eventDescription) {
-    console.log(userID);
-    console.log(eventName);
-    console.log(eventDateTime);
-    console.log(eventAddress);
-    console.log(eventCity);
-    console.log(eventState);
-    console.log(eventZIP);
-    console.log(eventDescription);
     db.connection.execute(
         'INSERT INTO Event (EventName, Description, EventDateTime, StreetAddress, City, StateID, ZipCode, CreatorID) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
         [eventName, eventDescription, eventDateTime, eventAddress, eventCity, eventState, eventZIP, userID],
-        err => {if(err) console.log(err);}
+        function(err, result) {
+            if(err) console.log(err);
+            exports.joinEvent(result.insertId, userID);
+        }
     );
 }
 
-exports.joinEvent = function joinEvent(eventID, userID) {
+exports.canJoin = function canJoin(eventID, userID) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT EventID FROM EventAttendee WHERE EventID = ? AND UserID = ?',
+            [eventID, userID],
+            function (err, results) {
+                if (err) reject(err);
 
+                if (results.length > 0) {
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            }
+        )
+    })
 }
 
+// Returns the StateID of a given state.
 exports.getStateID = function getStateID(state) {
     return new Promise(function(resolve, reject) {
         db.connection.execute(
@@ -53,5 +72,50 @@ exports.getStateID = function getStateID(state) {
                 }
             }
         );
+    })
+}
+
+// Returns all the details of events that the User has NOT joined.
+exports.fetchAvailable = function fetchAvailable(userID) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT e.EventID, e.EventName, e.`Description`, e.EventDateTime, e.StreetAddress, e.City, s.StateInitials, e.ZipCode, u.FirstName, u.LastName FROM `Event` e JOIN State s ON e.StateID = s.StateID JOIN `User` as u ON e.CreatorID = u.UserID WHERE e.EventID NOT IN (SELECT EventID FROM EventAttendee ea WHERE ea.UserID = ?)',
+            [userID],
+            function (err, results) {
+                if (err) reject(err);
+
+                resolve(results);
+            }
+        )
+    })
+}
+
+// Returns all the details of the events that the User has joined.
+exports.fetchJoined = function fetchJoined(userID) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT e.EventID, e.EventName, e.Description, e.EventDateTime, e.StreetAddress, e.City, s.StateInitials, e.ZipCode, ec.FirstName, ec.LastName FROM State as s RIGHT JOIN Event as e ON s.StateID = e.StateID LEFT JOIN EventAttendee as ea ON e.EventID  = ea.EventID LEFT JOIN User as u ON ea.UserID = u.UserID AND u.UserID = ? JOIN User as ec ON e.CreatorID = ec.UserID WHERE u.UserID = ?',
+            [userID, userID],
+            function (err, results) {
+                if (err) reject(err);
+
+                resolve(results);
+            }
+        )
+    })
+}
+
+// Returns all the details of the events that the User has created.
+exports.fetchCreated = function fetchCreated(userID) {
+    return new Promise(function(resolve, reject) {
+        db.connection.execute(
+            'SELECT e.EventID, e.EventName, e.Description, e.EventDateTime, e.StreetAddress, e.City, s.StateInitials, e.ZipCode, ec.FirstName, ec.LastName FROM State as s RIGHT JOIN Event as e ON s.StateID = e.StateID LEFT JOIN EventAttendee as ea ON e.EventID  = ea.EventID LEFT JOIN User as u ON ea.UserID = u.UserID AND u.UserID = ? JOIN User as ec ON e.CreatorID = ec.UserID WHERE e.CreatorID = ?',
+            [userID, userID],
+            function (err, results) {
+                if (err) reject(err);
+
+                resolve(results);
+            }
+        )
     })
 }

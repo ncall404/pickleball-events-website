@@ -1,5 +1,6 @@
 /*
-server.js is for running the server and handling the routing of the website. Handling the routing includes doing any server-side validation for submitted forms.
+server.js is for running the server and handling the routing of the website.
+Handling the routing includes doing any server-side validation for submitted forms.
 */
 
 const express = require('express');
@@ -49,15 +50,44 @@ app.get("/pages/events/event-create", async function (req, res) {
     } 
 });
 
-app.get("/pages/events/event-list", function (req, res) {
+app.get("/pages/events/event-list", async function (req, res) {
     if (req.session.loggedIn) {
-        res.sendFile(path.join(__dirname, '/pages/events/event-list.html'));
+        if (req.header('Content-Type') == 'application/json') {
+            if (req.query.type === "available") {
+                const available = await event.fetchAvailable(req.session.userID);
+                res.json( {events: available} );
+            } else if (req.query.type === "joined") {
+                const joined = await event.fetchJoined(req.session.userID);
+                res.json( {events: joined} );
+            } else if (req.query.type === "created") {
+                const created = await event.fetchCreated(req.session.userID);
+                res.json( {events: created} );
+            }
+        } else {
+            res.sendFile(path.join(__dirname, '/pages/events/event-list.html'));
+        }
     } else {
         req.session.loggedIn = false;
         res.status(401).send('<h1>Not logged in!</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
     }
 });
 
+app.get("/pages/events/event-list/join/:eventID", async function (req, res) {
+    if (req.session.loggedIn) {
+        userID = req.session.userID;
+        eventID = req.params.eventID;
+        var canJoin = await event.canJoin(eventID, userID);
+        if (canJoin) {
+            event.joinEvent(eventID, userID);
+            res.redirect('/pages/events/event-list?type=available');
+        } else {
+            res.redirect('/pages/events/event-list?type=available');
+        }
+    } else {
+        req.session.loggedIn = false;
+        res.status(401).send('<h1>Not logged in!</h1> <br> <a href="/pages/user/login">Please log in to access this page.</a>');
+    }
+})
 
 
 // User registration POST request.  Does server-side validation on the POST request then handles registering the user.
@@ -113,7 +143,7 @@ async function(req, res) {
         req.session.userID = userID;
         req.session.loggedIn = true;
         req.session.cookie.maxAge = 43200000; // Cookie lasts for 12 hours.
-        res.redirect('/pages/events/event-list');
+        res.redirect('/pages/events/event-list?type=available');
     }
     // else if errors then send error messages to client and stay on the login page.
     else if (errors.array().length > 0) {
@@ -136,16 +166,15 @@ app.post("/pages/events/event-create",
         }
     }),
     body('eventZIP').notEmpty().withMessage("The ZIP code / postal code where your event is taking place is required.").bail().isPostalCode('US').escape(),
-    body('eventDescription').trim().escape().matches( /[A-Za-z0-9\s\.,'":!\?&#\$\\]/ ).withMessage("Please keep the description as only numbers, alphabetic letters, spaces/linebreaks, and basic punctuation.").bail().isLength({max: 500}).withMessage("The event description must be 500 characters or less."),
+    body('eventDescription').trim().matches( /[A-Za-z0-9\s\.,'":!\?&#\$\\]/ ).withMessage("Please keep the description as only numbers, alphabetic letters, spaces/linebreaks, and basic punctuation.").bail().escape().isLength({max: 500}).withMessage("The event description must be 500 characters or less."),
 async function(req, res) {
     const errors = validationResult(req);
     if (errors.array().length <= 0) {
         const data = matchedData(req);
         var eventStateID = await event.getStateID(data.eventState);
         const newDateTime = custValidation.convertDateTime(data.eventDateTime);
-        console.log(eventStateID);
         event.createEvent(req.session.userID, data.eventName, newDateTime, data.eventAddress, data.eventCity, eventStateID, data.eventZIP, data.eventDescription);
-        res.redirect("/pages/events/event-list");
+        res.redirect("/pages/events/event-list?type=available");
     }
     else if (errors.array().length > 0) {
         console.log(errors.array());
