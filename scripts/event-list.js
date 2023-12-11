@@ -39,7 +39,6 @@ async function fetchEvents(type) {
     var eventList = contents.events;
     var listContainer = document.getElementById(type + "EventsList");
     listContainer.innerHTML = "";
-
     eventList.forEach(event => {
         var eventDateTime = new Date(event.EventDateTime);
         eventDateTime.setMinutes(eventDateTime.getMinutes() + -(eventDateTime.getTimezoneOffset()));
