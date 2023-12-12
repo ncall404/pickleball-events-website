@@ -26,10 +26,10 @@
                     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav ms-auto mb-2 mb-lg-0 small fw-bolder">
-                            <li class="nav-item"><a class="nav-link" href="./index.html">Home</a></li>
-                            <li class="nav-item"><a class="nav-link" href="events.html">Events</a></li>
-                            <li class="nav-item"><a class="nav-link" href="projects.html">Projects</a></li>
-                            <li class="nav-item"><a class="nav-link" href="login.html">Login</a></li>
+                            <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                            <li class="nav-item"><a class="nav-link" href="./event-list?type=available">Events</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../user/register.html">Sign Up</a></li>
+                            <li class="nav-item"><a class="nav-link" href="../user/login.html">Login</a></li>
                         </ul>
                     </div>
                 </div>
@@ -54,27 +54,27 @@
                                 <!-- https://startbootstrap.com/solution/contact-forms-->
                                 <!-- to get an API token!-->
         <form action="/pages/events/event-create" method="post" id="eventCreateForm" novalidate>
-            <label for="eventName">Event Name</label>
+            <label for="eventName">Event Name: </label>
             <input type="text" name="eventName" placeholder="Your event name" id="eventName" aria-required="true"> <br>
 
-            <label for="eventDateTime">Event Date and Time:</label> 
+            <label for="eventDateTime">Event Date and Time: </label> 
             <input type="datetime-local" min="2023-11-01T00:00:00" name="eventDateTime" id="eventDateTime"><br>
 
-            <label for="eventAddress">Event Street Address</label>
+            <label for="eventAddress">Event Street Address: </label>
             <input type="text" name="eventAddress" placeholder="800 W Example Street" id="eventAddress" aria-required="true"> <br>
 
-            <label for="eventCity">Event City</label> 
+            <label for="eventCity">Event City: </label> 
             <input type="text" name="eventCity" placeholder="e.g. Salt Lake City" id="eventCity" aria-required="true"><br>
 
-            <label for="eventState">Event State</label> 
+            <label for="eventState">Event State: </label> 
             <select id="eventState" name="eventState" aria-required="true">
                 <option value="" disabled selected>Select State</option>
             </select><br>
 
-            <label for="eventZIP">Event ZIP Code</label> 
+            <label for="eventZIP">Event ZIP Code: </label> 
             <input type="text" name="eventZIP" id="eventZIP" aria-required="true"><br>
 
-            <label for="eventDescription">Event Description</label> <br>
+            <label for="eventDescription">Event Description: </label> <br>
             <textarea name="eventDescription" id="eventDescription" cols="30" rows="10" aria-required="false"></textarea><br>
 
 
