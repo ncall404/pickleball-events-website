@@ -109,7 +109,7 @@ exports.fetchJoined = function fetchJoined(userID) {
 exports.fetchCreated = function fetchCreated(userID) {
     return new Promise(function(resolve, reject) {
         db.connection.execute(
-            'SELECT e.EventID, e.EventName, e.Description, e.EventDateTime, e.StreetAddress, e.City, s.StateInitials, e.ZipCode, ec.FirstName, ec.LastName FROM State as s RIGHT JOIN Event as e ON s.StateID = e.StateID LEFT JOIN EventAttendee as ea ON e.EventID  = ea.EventID LEFT JOIN User as u ON ea.UserID = u.UserID AND u.UserID = ? JOIN User as ec ON e.CreatorID = ec.UserID WHERE e.CreatorID = ?',
+            'SELECT DISTINCT e.EventID, e.EventName, e.Description, e.EventDateTime, e.StreetAddress, e.City, s.StateInitials, e.ZipCode, ec.FirstName, ec.LastName FROM State as s RIGHT JOIN Event as e ON s.StateID = e.StateID LEFT JOIN EventAttendee as ea ON e.EventID  = ea.EventID LEFT JOIN User as u ON ea.UserID = u.UserID AND u.UserID = ? JOIN User as ec ON e.CreatorID = ec.UserID WHERE e.CreatorID = ?',
             [userID, userID],
             function (err, results) {
                 if (err) reject(err);

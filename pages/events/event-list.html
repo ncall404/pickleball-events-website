@@ -34,37 +34,37 @@
                 </div>
             </div>
         </nav>
-        <h2>Events</h2>
-        <ul class="nav nav-tabs" id="eventTabs" role="tablist">
-            <li class="nav-item" role="presentation">
-                <button class="nav-link active" id="availableTab" data-bs-toggle="tab" data-bs-target="#availableEvents" type="button" role="tab" aria-controls="availableEvents" aria-selected="true">Available</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="joinedTab" data-bs-toggle="tab" data-bs-target="#joinedEvents" type="button" role="tab" aria-controls="joinedEvents" aria-selected="false">Joined</button>
-            </li>
-            <li class="nav-item" role="presentation">
-                <button class="nav-link" id="createdTab" data-bs-toggle="tab" data-bs-target="#createdEvents" type="button" role="tab" aria-controls="createdEvents" aria-selected="false">Created</button>
-            </li>
-          </ul>
-        <div class="tab-content" id="eventTabContent">
-            <div class="tab-pane fade show active"  id="availableEvents" role="tabpanel" aria-labelledby="availableTabContent" tabindex="0">
-                <div id="availableEventsList"></div>
+        <div class="container px-5 my-5">
+            <div class="text-center mb-5">
+                <h2>Events</h2>
             </div>
+        
+            <a class="btn btn-outline-dark btn-lg px-5 py-3 fs-6 fw-bolder mb-3" href="./event-create">Create Event</a>
+            <ul class="nav nav-tabs" id="eventTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="availableTab" data-bs-toggle="tab" data-bs-target="#availableEvents" type="button" role="tab" aria-controls="availableEvents" aria-selected="true">Available</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="joinedTab" data-bs-toggle="tab" data-bs-target="#joinedEvents" type="button" role="tab" aria-controls="joinedEvents" aria-selected="false">Joined</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link" id="createdTab" data-bs-toggle="tab" data-bs-target="#createdEvents" type="button" role="tab" aria-controls="createdEvents" aria-selected="false">Created</button>
+                </li>
+            </ul>
+            <div class="tab-content" id="eventTabContent">
+                <div class="tab-pane fade show active"  id="availableEvents" role="tabpanel" aria-labelledby="availableTabContent" tabindex="0">
+                    <div id="availableEventsList"></div>
+                </div>
 
-            <div class="tab-pane fade" id="joinedEvents" role="tabpanel" aria-labelledby="joinedTabContent" tabindex="0">
-                <div id="joinedEventsList"></div>
-            </div>
-    
-            <div class="tab-pane fade" id="createdEvents" role="tabpanel" aria-labelledby="createdTabContent" tabindex="0">
-                <div id="createdEventsList"></div>
+                <div class="tab-pane fade" id="joinedEvents" role="tabpanel" aria-labelledby="joinedTabContent" tabindex="0">
+                    <div id="joinedEventsList"></div>
+                </div>
+        
+                <div class="tab-pane fade" id="createdEvents" role="tabpanel" aria-labelledby="createdTabContent" tabindex="0">
+                    <div id="createdEventsList"></div>
+                </div>
             </div>
         </div>
-          
-        
-        <a href="/">Temporary Home Button</a> <br>
-        <a href="./event-create">Create Event Form</a>
-
-        
     </main>
     <!-- Footer-->
         <footer class="bg-white py-4 mt-auto">
